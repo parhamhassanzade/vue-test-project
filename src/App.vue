@@ -1,28 +1,61 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Header v-bind:index="this.index" />
+
+    <b-container class="bv-example-row">
+      <b-row>
+        <b-col sm="6" offset="3">
+          <Content v-bind:CQ="questionList[index]" v-bind:next="next"
+        /></b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Header from "./components/Header-main.vue";
+import Content from "./components/Content-main.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    Header,
+    Content,
+  },
+  data() {
+    return {
+      questionList: [],
+      index: 0,
+    };
+  },
+  methods: {
+    next() {
+      if (this.index < 9) {
+        this.index++;
+      }
+    },
+  },
+  mounted: function () {
+    fetch("https://opentdb.com/api.php?amount=10&type=multiple", {
+      method: "get",
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        this.questionList = result.results;
+      });
+  },
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+/* #app { */
+/* font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  color: #2c3e50; */
+/* margin-top: 60px; */
+/* } */
 </style>
